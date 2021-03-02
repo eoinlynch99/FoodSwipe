@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "567901053360",
+    "project_id": "foodswipe-e90ec",
+    "storage_bucket": "foodswipe-e90ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567901053360:android:0df813b474f26b69b57675",
+        "android_client_info": {
+          "package_name": "com.fyp.foodswipe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567901053360-4g6bjgia0b4nhvdja2q52qcdtajnutv7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fyp.foodswipe",
+            "certificate_hash": "4859a1c9933f86829eafe2758a5625257d5cdb0f"
+          }
+        },
+        {
+          "client_id": "567901053360-i37nekkucprn0e2acb6rq64r2d8n6nfe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtsp1ME8IAmDfac7uw5BE6NNN2DJKBe08"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567901053360-i37nekkucprn0e2acb6rq64r2d8n6nfe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
