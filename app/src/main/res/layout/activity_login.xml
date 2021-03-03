@@ -69,7 +69,7 @@
         style="@style/Widget.AppCompat.Button.Small"
         android:layout_width="269dp"
         android:layout_height="38dp"
-        android:background="@color/black"
+        android:background="@color/teal_700"
         android:backgroundTintMode="add"
         android:text="Register"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -14,6 +14,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class register extends AppCompatActivity {
     // setting variables for the fields
@@ -25,7 +27,7 @@ public class register extends AppCompatActivity {
     ProgressBar progressBar;
 
     // creating a firebase auth variable
-    FirebaseAuth fAuth;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +43,11 @@ public class register extends AppCompatActivity {
         mLoginBtn = findViewById(R.id.loginPG_btn);
         progressBar = findViewById(R.id.progressBar);
 
-        fAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
 
         // checking if user is already logged in
-        if(fAuth.getCurrentUser() != null){
+        if(mAuth.getCurrentUser() != null){
             startActivity(new Intent(getApplicationContext(),MainActivity.class));
             finish();
         }
@@ -73,11 +75,15 @@ public class register extends AppCompatActivity {
 
                 // registering the user
 
-                fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(register.this, "User Created.", Toast.LENGTH_SHORT).show();
+                            String userID = mAuth.getCurrentUser().getUid();
+                            // registering to realtime db
+                            DatabaseReference userDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("email");
+                            userDb.setValue(email);
                             startActivity(new Intent(getApplicationContext(),MainActivity.class));
                         }
 

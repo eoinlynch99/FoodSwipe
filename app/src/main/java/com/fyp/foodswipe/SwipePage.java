@@ -1,6 +1,7 @@
 package com.fyp.foodswipe;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -94,5 +102,10 @@ public class SwipePage extends AppCompatActivity {
     }
 
     //saving user location
+    private class userLocation  {
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-}
+
+    }
+};
+
