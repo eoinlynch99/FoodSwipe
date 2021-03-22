@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class register extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
     // setting variables for the fields
     EditText mFirstName, mSurName, mEmail, mPassword;
 
@@ -79,7 +79,7 @@ public class register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(register.this, "User Created.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "User Created.", Toast.LENGTH_SHORT).show();
                             String userID = mAuth.getCurrentUser().getUid();
                             // registering to realtime db
                             DatabaseReference userDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("email");
@@ -89,7 +89,7 @@ public class register extends AppCompatActivity {
 
                         else
                         {
-                            Toast.makeText(register.this, "Error !" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Error !" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -101,7 +101,7 @@ public class register extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),login.class));
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             }
         });
     }

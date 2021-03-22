@@ -1,26 +1,18 @@
 package com.fyp.foodswipe;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApi;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
 
-public class SwipePage extends AppCompatActivity {
+public class SwipeActivity extends AppCompatActivity {
 
     //array for profiles
     private ArrayList<String> al;
@@ -67,12 +59,12 @@ public class SwipePage extends AppCompatActivity {
                 //Do something on the left!
                 //You also have access to the original object.
                 //If you want to use it just cast it (String) dataObject
-                Toast.makeText(SwipePage.this, "left", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SwipeActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {
-                Toast.makeText(SwipePage.this, "right", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SwipeActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
 
             // sample card to show swiping finished will appear when done
@@ -95,7 +87,7 @@ public class SwipePage extends AppCompatActivity {
         flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
-                Toast.makeText(SwipePage.this, "tap", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SwipeActivity.this, "tap", Toast.LENGTH_SHORT).show();
             }
         });
 

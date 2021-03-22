@@ -21,19 +21,19 @@ public class MainActivity extends AppCompatActivity {
     public void logout(View view) {
 
         FirebaseAuth.getInstance().signOut();;
-        startActivity(new Intent(getApplicationContext(), login.class));
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         finish();
     }
 
     public void map(View view) {
 
-        startActivity(new Intent(getApplicationContext(), settings.class));
+        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
         finish();
     }
 
     public void swipe(View swipe) {
 
-        startActivity(new Intent(getApplicationContext(), SwipePage.class));
+        startActivity(new Intent(getApplicationContext(), SwipeActivity.class));
         finish();
     }
 }
