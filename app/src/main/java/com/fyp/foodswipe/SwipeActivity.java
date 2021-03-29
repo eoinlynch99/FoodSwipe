@@ -24,7 +24,7 @@ public class SwipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_swipe_page);
+        setContentView(R.layout.activity_swipe);
 
         // list of sample profiles
         al = new ArrayList<>();

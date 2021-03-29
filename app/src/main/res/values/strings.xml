@@ -7,4 +7,6 @@
     <string name="default_info_title">Default Location</string>
     <string name="default_info_snippet">No locations found</string>
     <string name="title_activity_maps">Map</string>
+    <string name="google_map_key">AIzaSyB55zVwYmfsg_5776MOyUU3-XOiGMAH4zc</string>
+
 </resources>
