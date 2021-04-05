@@ -44,7 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     FusedLocationProviderClient fusedLocationProviderClient;
     int DEFAULT_ZOOM = 15;
     private static final int REQUEST_CODE = 101;
-    boolean updateFinished;
     private Marker[] restaurantMarkers;
     private MarkerOptions[] restaurants;
     private GoogleMap gMap;
@@ -133,7 +132,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected String doInBackground(String... restaurantsURL) {
             //fetch places
-            updateFinished = false;
             StringBuilder placesBuilder = new StringBuilder();
             for (String placeSearchURL : restaurantsURL) {
                 try {
