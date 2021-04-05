@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class SwipeActivity extends AppCompatActivity {
 
-    //array for profiles
+    // array for the different profiles
     private ArrayList<String> al;
     private ArrayAdapter<String> arrayAdapter;
     private int i;
@@ -48,7 +48,7 @@ public class SwipeActivity extends AppCompatActivity {
             // every time a card is swiped on it is removed from the array
             @Override
             public void removeFirstObjectInAdapter() {
-                // this is the simplest way to delete an object from the Adapter (/AdapterView)
+                // this is used to remove an item from the adapter
                 Log.d("LIST", "removed object!");
                 al.remove(0);
                 arrayAdapter.notifyDataSetChanged();
@@ -92,12 +92,6 @@ public class SwipeActivity extends AppCompatActivity {
         });
 
     }
+}
 
-    //saving user location
-    private class userLocation  {
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-
-    }
-};
 

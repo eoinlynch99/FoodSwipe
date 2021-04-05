@@ -225,20 +225,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         // reads the latitude and longitude of the place
                         restLatLng = new LatLng(Double.parseDouble(loc.getString("lat")),
                                 Double.parseDouble(loc.getString("lng")));
-                        // storing thea rea
+                        // storing the area
                         vicinity = placeObject.getString("vicinity");
                         // storing the place name
                         restName = placeObject.getString("name");
                     } // end try
 
-                    // catch to account for a place with missing values
+                    // catch to account for a restaurant with missing values
                     catch (JSONException jse) {
-                        Log.v("PLACES", "missing value");
+                        Log.v("RESTAURANT", "missing value");
                         missingValue = true;
                         jse.printStackTrace();
                     } // end catch
 
-                    // making sure a place with missing info doesn't display
+                    // making sure a restaurant with missing info doesn't display
                     if (missingValue) restaurants[i] = null;
                     else
                         restaurants[i] = new MarkerOptions()
@@ -251,10 +251,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 e.printStackTrace();
             }// end catch
 
-            // checking if there's values stored at places and placeMarkers
+            // checking if there's values stored at restaurants and restaurantsMarkers
             if (restaurants != null && restaurantMarkers != null) {
                 // log used for debugging
-                Log.d("test", "The placeMarkers length is " + restaurantMarkers.length + "...............");
+                Log.d("test", "The restaurantMarkers length is " + restaurantMarkers.length + "...............");
 
                 // for loop to navigate through places
                 for (int x = 0; x < restaurants.length && x < restaurantMarkers.length; x++) {
