@@ -22,7 +22,6 @@ public class LoginActivity extends AppCompatActivity {
     EditText mEmail, mPassword;
     Button mLoginBtn;
     TextView mCreateBtn;
-    ProgressBar progressBar;
     FirebaseAuth fAuth;
 
     @Override
@@ -32,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mEmail = findViewById(R.id.userEmail);
         mPassword = findViewById(R.id.userPass);
-        progressBar = findViewById(R.id.progressBar);
         fAuth = FirebaseAuth.getInstance().getInstance();
         mLoginBtn = findViewById(R.id.login_btn);
         mCreateBtn = findViewById(R.id.registPg_btn);
@@ -43,23 +41,20 @@ public class LoginActivity extends AppCompatActivity {
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
 
+                // password and email error detection
                 if (TextUtils.isEmpty(email)) {
                     mEmail.setError("Email must be entered!");
                     return;
-                }
-
+                } // end if
                 if (TextUtils.isEmpty(password)) {
                     mPassword.setError("Password must be entered!");
-                }
-
+                } // end if
                 if (password.length() < 6) {
                     mPassword.setError("Password must be at least 6 characters long");
-                }
+                } // end if
 
-               //progressBar.setVisibility(View.VISIBLE);
 
-                // user authentication
-
+                // logs the user in
                 fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -67,19 +62,19 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             Toast.makeText(LoginActivity.this, "Logged in.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        }
+                        } // end  if
                         else
                         {
                             Toast.makeText(LoginActivity.this, "Email or Password are incorrect.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        });
+                        } // end else
+                    } // end onComplete
+                }); // end signInWithEmailAndPassword
+            } // end onClick
+        }); // end mLoginBtn.setOnClickListener
 
+        // button to change user to register page
         mCreateBtn.setOnClickListener(new View.OnClickListener()
         {
-
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), RegisterActivity.class));

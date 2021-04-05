@@ -24,7 +24,6 @@ public class RegisterActivity extends AppCompatActivity {
     // setting variables for buttons
     Button mRegisterBtn;
     TextView mLoginBtn;
-    ProgressBar progressBar;
 
     // creating a firebase auth variable
     FirebaseAuth mAuth;
@@ -41,7 +40,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         mRegisterBtn = findViewById(R.id.register_btn);
         mLoginBtn = findViewById(R.id.loginPG_btn);
-        progressBar = findViewById(R.id.progressBar);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -50,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         if(mAuth.getCurrentUser() != null){
             startActivity(new Intent(getApplicationContext(),MainActivity.class));
             finish();
-        }
+        } // end if
 
         mRegisterBtn.setOnClickListener (new View.OnClickListener() {
             @Override
@@ -58,23 +56,21 @@ public class RegisterActivity extends AppCompatActivity {
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
 
+                // error detection for the different information fields
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Email must be entered!");
                     return;
-                }
+                } // end if
 
                 if(TextUtils.isEmpty(password)){
                     mPassword.setError("Password must be entered!");
-                }
+                } // end if
 
                 if(password.length() < 6){
                     mPassword.setError("Password must be at least 6 characters long");
-                }
-
-                progressBar.setVisibility(View.VISIBLE);
+                } // end if
 
                 // registering the user
-
                 mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -85,24 +81,22 @@ public class RegisterActivity extends AppCompatActivity {
                             DatabaseReference userDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("email");
                             userDb.setValue(email);
                             startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        }
-
+                        } // end if
                         else
                         {
                             Toast.makeText(RegisterActivity.this, "Error !" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        });
+                        } // end else
+                    } // end onComplete
+                }); // end createUserWithEmailAndPassword
+            } // end onClick
+        }); // end setOnClick
 
         mLoginBtn.setOnClickListener(new View.OnClickListener()
         {
-
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            }
-        });
-    }
-}
+            } // end onClick
+        }); // end mLoginBtn
+    } // end onCreate
+} // end RegisterActivity

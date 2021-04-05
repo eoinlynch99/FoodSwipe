@@ -6,7 +6,7 @@
     android:layout_height="170dp">
 
     <TextView
-        android:id="@+id/helloText"
+        android:id="@+id/name"
         android:textSize="40sp"
         android:textColor="@android:color/white"
         android:background="#E339"

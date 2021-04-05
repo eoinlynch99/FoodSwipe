@@ -19,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -44,10 +45,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     int DEFAULT_ZOOM = 15;
     private static final int REQUEST_CODE = 101;
     boolean updateFinished;
-    private Marker[] placeMarkers;
-    private MarkerOptions[] places;
+    private Marker[] restaurantMarkers;
+    private MarkerOptions[] restaurants;
     private GoogleMap gMap;
-
 
 
     @Override
@@ -57,10 +57,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // initializes fusedLocationProviderClient to be used to get users location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         int MAX_PLACES = 20;
-        placeMarkers = new Marker[MAX_PLACES];
+        restaurantMarkers = new Marker[MAX_PLACES];
         getLocation();
     } // end onCreate
 
+
+    // checking if user has granted location permissions and then getting the users location
     private void getLocation() {
         if(ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -83,7 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     } // end getLocation
 
 
-
+    // class that is called when map is initialised
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
@@ -92,158 +94,179 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double lng = deviceLocation.getLongitude();
 
         LatLng latLng = new LatLng(lat, lng);
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("You are here!");
+
+        // adding a blue coloured marker for the user's location
+        googleMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title("You are here")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+        // moves the map camera to the user's location
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
 
-
-
-        //build places query string
-        String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
+        // places API http query
+        String restaurantsSearchURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
                 "json?location="+lat+","+lng+
                 "&radius=5000&sensor=true" +
                 "&types=restaurant"+
                 "&key=AIzaSyB55zVwYmfsg_5776MOyUU3-XOiGMAH4zc";
 
-        //execute query
-        googleMap.addMarker(markerOptions);
-        new GetPlaces().execute(placesSearchStr);
+        // running the query
+        new GetPlaces().execute(restaurantsSearchURL);
     } // end onMapReady
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLocation();
-            }
-        } // end switch
+            } // end if
+        } // end if
     } // end onRequestPermissionsResult
 
+
+    // class used to verify places http query and verify query
     @SuppressLint("StaticFieldLeak")
     private class GetPlaces extends AsyncTask<String, Void, String>{
         @Override
-        protected String doInBackground(String... placesURL) {
+        protected String doInBackground(String... restaurantsURL) {
             //fetch places
             updateFinished = false;
             StringBuilder placesBuilder = new StringBuilder();
-            for (String placeSearchURL : placesURL) {
+            for (String placeSearchURL : restaurantsURL) {
                 try {
-
+                    // places the place API search in a URL
                     URL requestUrl = new URL(placeSearchURL);
                     HttpURLConnection connection = (HttpURLConnection)requestUrl.openConnection();
+
+                    // specifying that a http GET request is needed
                     connection.setRequestMethod("GET");
                     connection.connect();
+
+                    // variable to store response code if there's any connection feedback
                     int responseCode = connection.getResponseCode();
 
+                    // if the http response code says everything is functioning
                     if (responseCode == HttpURLConnection.HTTP_OK) {
 
-                        BufferedReader reader;
-
+                        // reads the contents of the page
+                        BufferedReader bReader;
                         InputStream inputStream = connection.getInputStream();
+
                         if (inputStream == null) {
                             return "";
-                        }
-                        reader = new BufferedReader(new InputStreamReader(inputStream));
+                        } // end if
 
+                        bReader = new BufferedReader(new InputStreamReader(inputStream));
                         String line;
-                        while ((line = reader.readLine()) != null) {
 
+                        while ((line = bReader.readLine()) != null) {
                             placesBuilder.append(line).append("\n");
-                        }
+                        } // end while
 
                         if (placesBuilder.length() == 0) {
                             return "";
-                        }
+                        } // end if
 
+                        // log for debugging
                         Log.d("test", placesBuilder.toString());
-                    }
+                    } // end if
                     else {
+                        // log for debugging
                         Log.i("test", "Unsuccessful HTTP Response Code: " + responseCode);
-                    }
-                } catch (MalformedURLException e) {
+                    } // end else
+
+                } // end try
+                // error with URL
+                catch (MalformedURLException e) {
+                    // log for debugging
                     Log.e("test", "Error processing Places API URL", e);
-                } catch (IOException e) {
+                } // end catch
+                // catch for error
+                catch (IOException e) {
+                    // log for debugging
                     Log.e("test", "Error connecting to Places API", e);
-                }
-            }
+                } // end catch
+            } // end for
             return placesBuilder.toString();
-        }
+        } // end doInBackground
 
-        //process data retrieved from doInBackground
+
+        // class used to process the data from doInBackground
         protected void onPostExecute(String result) {
-            //parse place data returned from Google Places
-            //remove existing markers
-            if (placeMarkers != null) {
-                for (Marker placeMarker : placeMarkers) {
-                    if (placeMarker != null)
-                        placeMarker.remove();
-                }
-            }
             try {
-                //parse JSON
-
-                //create JSONObject, pass stinrg returned from doInBackground
+                // jsonOBJECT used to store the string variable result from doInBackground
                 JSONObject resultObject = new JSONObject(result);
-                //get "results" array
-                JSONArray placesArray = resultObject.getJSONArray("results");
-                //marker options for each place returned
-                places = new MarkerOptions[((JSONArray) placesArray).length()];
-                //loop through places
+                // creates the array to store data in
+                JSONArray restaurantsArray = resultObject.getJSONArray("results");
+                // create marker for each place returned
+                restaurants = new MarkerOptions[((JSONArray) restaurantsArray).length()];
 
-                Log.d("test", "The placesArray length is " + placesArray.length() + "...............");
+                // log used for debugging
+                Log.d("test", "The placesArray length is " + restaurantsArray.length() + "...............");
 
-                for (int i = 0; i < placesArray.length(); i++) {
-                    //parse each place
-                    //if any values are missing we won't show the marker
+                // for loop through places
+                for (int i = 0; i < restaurantsArray.length(); i++) {
+                    // variable to check for missing values, if any are present no marker placed
                     boolean missingValue;
-                    LatLng placeLL = null;
-                    String placeName = "";
+
+                    LatLng restLatLng = null;
+                    String restName = "";
                     String vicinity = "";
+
+                    // try catch for any places with missing values
                     try {
-                        //attempt to retrieve place data values
                         missingValue = false;
-                        //get place at this index
-                        JSONObject placeObject = placesArray.getJSONObject(i);
-                        //get location section
+                        // get the details of each place at each index
+                        JSONObject placeObject = restaurantsArray.getJSONObject(i);
+                        // gets information about place geometry
                         JSONObject loc = placeObject.getJSONObject("geometry")
                                 .getJSONObject("location");
-                        //read lat lng
-                        placeLL = new LatLng(Double.parseDouble(loc.getString("lat")),
+                        // reads the latitude and longitude of the place
+                        restLatLng = new LatLng(Double.parseDouble(loc.getString("lat")),
                                 Double.parseDouble(loc.getString("lng")));
-                        //get types
-                        JSONArray types = placeObject.getJSONArray("types");
-                        //vicinity
+                        // storing thea rea
                         vicinity = placeObject.getString("vicinity");
-                        //name
-                        placeName = placeObject.getString("name");
-                    } catch (JSONException jse) {
+                        // storing the place name
+                        restName = placeObject.getString("name");
+                    } // end try
+
+                    // catch to account for a place with missing values
+                    catch (JSONException jse) {
                         Log.v("PLACES", "missing value");
                         missingValue = true;
                         jse.printStackTrace();
-                    }
-                    //if values missing we don't display
-                    if (missingValue) places[i] = null;
+                    } // end catch
+
+                    // making sure a place with missing info doesn't display
+                    if (missingValue) restaurants[i] = null;
                     else
-                        places[i] = new MarkerOptions()
-                                .position(placeLL)
-                                .title(placeName)
+                        restaurants[i] = new MarkerOptions()
+                                .position(restLatLng)
+                                .title(restName)
                                 .snippet(vicinity);
-                }
-            } catch (Exception e) {
+                } // end for
+            }// end try
+            catch (Exception e) {
                 e.printStackTrace();
-            }
-            if (places != null && placeMarkers != null) {
-                Log.d("test", "The placeMarkers length is " + placeMarkers.length + "...............");
+            }// end catch
 
-                for (int p = 0; p < places.length && p < placeMarkers.length; p++) {
-                    //will be null if a value was missing
+            // checking if there's values stored at places and placeMarkers
+            if (restaurants != null && restaurantMarkers != null) {
+                // log used for debugging
+                Log.d("test", "The placeMarkers length is " + restaurantMarkers.length + "...............");
 
-                    if (places[p] != null) {
-
-                        placeMarkers[p] = gMap.addMarker(places[p]);
-                    }
-                }
-            }
-        }
-    }
-} // end onMapReady
+                // for loop to navigate through places
+                for (int x = 0; x < restaurants.length && x < restaurantMarkers.length; x++) {
+                    // if there is a value at the current index
+                    if (restaurants[x] != null) {
+                        // places a marker on the map
+                        restaurantMarkers[x] = gMap.addMarker(restaurants[x]);
+                    } // end if
+                } // end for
+            } // end if
+        } // end onPostExecute
+    } // end GetPlaces
+} // end MapsActivity
