@@ -2,6 +2,7 @@ package com.fyp.foodswipe;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -267,4 +268,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } // end if
         } // end onPostExecute
     } // end GetPlaces
+
+    // back button navigation
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
+    } // end onBackPressed
 } // end MapsActivity

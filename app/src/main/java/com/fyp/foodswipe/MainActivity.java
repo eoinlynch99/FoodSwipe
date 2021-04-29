@@ -33,4 +33,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), SwipeActivity.class));
         finish();
     } // end swipe
+
+    // back button navigation
+    @Override
+    public void onBackPressed() {
+        finish();
+    } // end onBackPressed
 } // end MainActivity

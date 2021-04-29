@@ -2,6 +2,7 @@ package com.fyp.foodswipe;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -92,6 +93,13 @@ public class SwipeActivity extends AppCompatActivity {
         });
 
     }
+
+    // back button navigation
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
+    } // end onBackPressed
 }
 
 
